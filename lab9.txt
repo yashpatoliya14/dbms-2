@@ -1,0 +1,57 @@
+name : yash patoliya
+
+lab 9
+
+-------------------------------------A
+
+1. Retrieve/Display every document of Deposit collection.
+db.deposit.find()
+
+2. Display only one document of Deposit collection. (Use: findOne())
+db.deposit.findOne()
+
+3. Insert following document into Deposit collection. (Use: insertOne())
+db.deposit.insertOne(  {
+    "ACTNO": 109,
+    "CNAME": "KIRTI",
+    "BNAME": "VIRAR",
+    "AMOUNT": 3000,
+    "ADATE": "3-5-97"
+  })
+
+
+4. Insert following documents into Deposit collection. (Use: insertMany())
+db.deposit.insertMany([
+  {
+    "id": 110,
+    "name": "MITALI ANDHERI",
+    "amount": 4500,
+    "date": "4-9-95"
+  },
+  {
+    "id": 111,
+    "name": "RAJIV NEHRU PLACE",
+    "amount": 7000,
+    "date": "2-10-98"
+  }
+]
+)
+
+5. Display all the documents of ‘VIRAR’ branch from Deposit collection.
+db.deposit.find({BNAME:"VIRAR"})
+
+6. Display all the documents of Deposit collection whose amount is between 3000 and 5000.
+db.deposit.find({$and:[{AMOUNT:{$gt:3000}},{AMOUNT:{$lt:5000}}]},{})
+
+7. Display all the documents of Deposit collection whose amount is greater than 2000 and branch is VIRAR.
+db.deposit.find({$and:[ {AMOUNT: {$gt:2000} } , {BNAME: {$eq:"VIRAR"}}]})
+
+8. Display all the documents with CNAME, BNAME and AMOUNT fields from Deposit collection.
+9. Display all the documents of Deposit collection on ascending order by CNAME.
+10. Display all the documents of Deposit collection on descending order by BNAME.
+11. Display all the documents of Deposit collection on ascending order by ACTNO and descending order by
+AMOUNT.
+12. Display only two documents of Deposit collection.
+13. Display 3rd document of Deposit collection.
+14. Display 6th and 7th documents of Deposit collection.
+15. Display the count of documents in Deposit collection. 
