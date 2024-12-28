@@ -47,11 +47,26 @@ db.deposit.find({$and:[{AMOUNT:{$gt:3000}},{AMOUNT:{$lt:5000}}]},{})
 db.deposit.find({$and:[ {AMOUNT: {$gt:2000} } , {BNAME: {$eq:"VIRAR"}}]})
 
 8. Display all the documents with CNAME, BNAME and AMOUNT fields from Deposit collection.
+db.deposit.find({}, {CNAME: 1, BNAME: 1, AMOUNT: 1, _id: 0});
+
 9. Display all the documents of Deposit collection on ascending order by CNAME.
+db.deposit.find().sort({CNAME: 1});
+
 10. Display all the documents of Deposit collection on descending order by BNAME.
+db.deposit.find().sort({BNAME: -1});
+
 11. Display all the documents of Deposit collection on ascending order by ACTNO and descending order by
 AMOUNT.
+db.deposit.find().sort({ACTNO: 1, AMOUNT: -1});
+
 12. Display only two documents of Deposit collection.
+db.deposit.find().limit(2);
+
 13. Display 3rd document of Deposit collection.
+db.deposit.find().skip(2).limit(1);
+
 14. Display 6th and 7th documents of Deposit collection.
+db.deposit.find().skip(5).limit(2);
+
 15. Display the count of documents in Deposit collection. 
+db.deposit.countDocuments();
