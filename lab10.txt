@@ -123,24 +123,99 @@ City:{bsonType:"string"},
 1. Display Female students and belong to Rajkot city.
 db.Student_data.find({$and:[{GENDER:"Female"},{CITY:"Rajkot"}]})
 
-2. Display students not studying in 3rd sem.
-3. Display students whose city is Jamnagar or Baroda. (use: IN)
-4. Display first 2 students names who lives in Baroda.
-5. Display Male students who studying in 3rd sem.
-6. Display sname and city and fees of those students whose roll no is less than 105.
-7. Update City of all students from 'Jamnagar' City and Department as 'CE' to 'Surat'.
-8. Increase Fees by 500 where the Gender is not 'Female'. (Use: Not)
-9. Set the Department of all students from 'EE' and in Sem 3 to 'Electrical'.
-10. Update the Fees of students in 'Rajkot' who are male.
-11. Change City to 'Vadodara' for students in Sem 5 and with fees less than 10000.
-12. Delete all students where the City is 'Ahmedabad' or GENDER is 'Male'.
-13. Delete students whose Rollno is not in the list [101, 105, 110].
-14. Delete students from the 'Civil' department who are in Sem 5 or Sem 7.
-15. Delete all students who are not in the cities 'Rajkot', 'Baroda', or 'Jamnagar'.
-16. Delete students whose Rollno is between 105 and 108.
-17. Rename the City field to LOCATION for all students.
-18. Rename the Department field to Branch where the Fees is less than 10000.
-19. Rename Sname to Fullname for students with Rollno in [106, 107, 108].
-20. Rename Fees to Tuition_Fees for all students with Fees greater than 9000.
-21. Rename Department to Major where the Fees is less than 15000 and Gender is 'Female'.
-22. Rename City to Hometown for all students whose SEM is 3 and Department is not 'Mechanical'
+// 1. Display students not studying in 3rd sem
+db.students.find({ semester: { $ne: 3 } })
+
+// 2. Display students whose city is Jamnagar or Baroda
+db.students.find({ city: { $in: ['Jamnagar', 'Baroda'] } })
+
+// 3. Display first 2 students' names who live in Baroda
+db.students.find({ city: 'Baroda' }, { name: 1, _id: 0 }).limit(2)
+
+// 4. Display male students who are studying in 3rd sem
+db.students.find({ gender: 'Male', semester: 3 })
+
+// 5. Display sname, city, and fees of those students whose roll no is less than 105
+db.students.find({ roll_no: { $lt: 105 } }, { sname: 1, city: 1, fees: 1, _id: 0 })
+
+// 6. Update the city of all students from 'Jamnagar' city and department 'CE' to 'Surat'
+db.students.updateMany(
+   { city: 'Jamnagar', department: 'CE' },
+   { $set: { city: 'Surat' } }
+)
+
+// 7. Increase fees by 500 where the gender is not 'Female'
+db.students.updateMany(
+   { gender: { $ne: 'Female' } },
+   { $inc: { fees: 500 } }
+)
+
+// 8. Set the department of all students from 'EE' and in Sem 3 to 'Electrical'
+db.students.updateMany(
+   { department: 'EE', semester: 3 },
+   { $set: { department: 'Electrical' } }
+)
+
+// 9. Update the fees of students in 'Rajkot' who are male
+db.students.updateMany(
+   { city: 'Rajkot', gender: 'Male' },
+   { $set: { fees: [new_amount] } }
+)
+
+// 10. Change city to 'Vadodara' for students in Sem 5 and with fees less than 10000
+db.students.updateMany(
+   { semester: 5, fees: { $lt: 10000 } },
+   { $set: { city: 'Vadodara' } }
+)
+
+// 11. Delete all students where the city is 'Ahmedabad' or gender is 'Male'
+db.students.deleteMany({ $or: [{ city: 'Ahmedabad' }, { gender: 'Male' }] })
+
+// 12. Delete students whose roll no is not in the list [101, 105, 110]
+db.students.deleteMany({ roll_no: { $nin: [101, 105, 110] } })
+
+// 13. Delete students from the 'Civil' department who are in Sem 5 or Sem 7
+db.students.deleteMany({ department: 'Civil', semester: { $in: [5, 7] } })
+
+// 14. Delete all students who are not in the cities 'Rajkot', 'Baroda', or 'Jamnagar'
+db.students.deleteMany({ city: { $nin: ['Rajkot', 'Baroda', 'Jamnagar'] } })
+
+// 15. Delete students whose roll no is between 105 and 108
+db.students.deleteMany({ roll_no: { $gte: 105, $lte: 108 } })
+
+// 16. Rename the city field to LOCATION for all students
+db.students.updateMany(
+   {},
+   { $rename: { 'city': 'location' } }
+)
+
+// 17. Rename the department field to Branch where the fees is less than 10000
+db.students.updateMany(
+   { fees: { $lt: 10000 } },
+   { $rename: { 'department': 'branch' } }
+)
+
+// 18. Rename Sname to Fullname for students with roll no in [106, 107, 108]
+db.students.updateMany(
+   { roll_no: { $in: [106, 107, 108] } },
+   { $rename: { 'sname': 'fullname' } }
+)
+
+// 19. Rename fees to Tuition_Fees for all students with fees greater than 9000
+db.students.updateMany(
+   { fees: { $gt: 9000 } },
+   { $rename: { 'fees': 'tuition_fees' } }
+)
+
+// 20. Rename department to Major where the fees is less than 15000 and gender is 'Female'
+db.students.updateMany(
+   { fees: { $lt: 15000 }, gender: 'Female' },
+   { $rename: { 'department': 'major' } }
+)
+
+// 21. Rename city to Hometown for all students whose semester is 3 and department is not 'Mechanical'
+db.students.updateMany(
+   { semester: 3, department: { $ne: 'Mechanical' } },
+   { $rename: { 'city': 'hometown' } }
+)
+
