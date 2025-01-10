@@ -188,7 +188,12 @@ drop databases("computer")
 ------------------------------------------------C---------------------------------------
 
 1. Create a new database named “Computer”.
-
+use "Computer"
 
 2. Create a collection named “Faculty” in the “Computer” database.
+db.createCollection("Faculty")
+
 3. Insert a below documents into “Faculty” collection. 
+db.Faculty.insertMany({
+....data
+})
