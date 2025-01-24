@@ -204,13 +204,94 @@ select * from PersonInfo
 --Part – B
 --7. Create a trigger that fires on INSERT operation on person table, which calculates the age and update
 --that age in Person table.
+create trigger tr_insert_age_calculate
+on PersonInfo
+instead of  insert
+as
+begin
+	
+	insert into PersonInfo(PersonID,PersonName,Salary,JoiningDate,City,Age,BirthDate)
+	select 
+	PersonID,PersonName,Salary,JoiningDate,City,Datediff(year,BirthDate,getdate()),BirthDate
+	from inserted 
+end
 
+insert into PersonInfo(PersonID,PersonName,Salary,JoiningDate,City,BirthDate) 
+values (116,'avii',10000,'1991-08-08','rajkot','2005-08-08')
+select * from PersonInfo
 
 --8. Create a Trigger to Limit Salary Decrease by a 10%.
+create trigger tr_insert_age_calculate
+on PersonInfo
+instead of update
+as
+begin
+	declare @salary1 int , @salary2 int ,@id int
+	select	@salary1 = Salary,@id = PersonID
+	from deleted 
+	
+	select	@salary2 = Salary
+	from inserted 
+	
+	if(@salary2>@salary1*0.9)
+	begin
+		update PersonInfo
+		set Salary = @salary2
+		where PersonID = @id 
+	end
+	else
+	begin
+		print 'not updated'
+	end
+	
+end
 
+update PersonInfo
+set Salary = 8000
+where PersonID =116
+
+select * from PersonInfo
 
 --Part – C
 --9. Create Trigger to Automatically Update JoiningDate to Current Date on INSERT if JoiningDate is NULL
 --during an INSERT.
+create trigger tr_insert_age_calculate
+on PersonInfo
+instead of  insert
+as
+begin
+	declare @jdate datetime, @id int,@name varchar(50) @sal int, @city varchar(50) ,@age int , @bdate datetime    
+	select	@jdate = JoiningDate, @id = PersonID, @name =  PersonName,  @sal = Salary,@city = City, @age = Age , @bdate = BirthDate
+	from inserted 
+	
+	if(@jdate is null)
+	begin
+		insert into PersonInfo(@id,@name,@sal,getdate(),@city,@age,@bdate)
+	end
+	else
+	begin
+		insert into PersonInfo(@id,@name,@sal,@jdate,@city,@age,@bdate)
+	end
+end
+
+insert into PersonInfo(PersonID,PersonName,Salary,JoiningDate,City,BirthDate) 
+values (116,'avii',10000,'1991-08-08','rajkot','2005-08-08')
+select * from PersonInfo
+
+select * from PersonInfo
+
+
+
 --10. Create DELETE trigger on PersonLog table, when we delete any record of PersonLog table it prints
 --‘Record deleted successfully from PersonLog’.
+create trigger tr_delete
+on PersonLog
+after  delete
+as
+begin
+	print 'Record deleted successfully from PersonLog'
+end
+
+
+
+
